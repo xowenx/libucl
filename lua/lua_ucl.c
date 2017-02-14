@@ -53,7 +53,7 @@ local table = {
   num = 100500,
   null = ucl.null,
   func = function ()
-    return 'huh'
+	return 'huh'
   end
 }
 
@@ -695,7 +695,7 @@ lua_ucl_parser_validate (lua_State *L)
 {
 	struct ucl_parser *parser, *schema_parser;
 	ucl_object_t *schema;
-	const char *schema_file;
+	const char *schema_file, *key;
 	struct ucl_schema_error err;
 
 	parser = lua_ucl_parser_get (L, 1);
@@ -736,8 +736,14 @@ lua_ucl_parser_validate (lua_State *L)
 
 		if (!ucl_object_validate (schema, parser->top_obj, &err)) {
 			lua_pushboolean (L, false);
-			lua_pushfstring (L, "validation error: "
+			key = ucl_object_key(err.obj);
+			if (key == NULL) {
+				lua_pushfstring (L, "validation error: "
 					"%s", err.msg);
+			} else {
+				lua_pushfstring (L, "validation error: %s : "
+					"%s", key, err.msg);
+			}
 		}
 		else {
 			lua_pushboolean (L, true);
@@ -1081,7 +1087,7 @@ local table = {
   num = 100500,
   null = ucl.null,
   func = function ()
-    return 'huh'
+	return 'huh'
   end
 }
 
