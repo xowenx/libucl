@@ -371,7 +371,7 @@ ucl_schema_validate_string (const ucl_object_t *schema,
 			constraint = ucl_object_toint (elt);
 			if (obj->len > constraint) {
 				ucl_schema_create_error (err, UCL_SCHEMA_CONSTRAINT, obj,
-						"string is too big: %.3f, maximum is: %.3f",
+						"string is too big: %u, maximum is: %d",
 						obj->len, constraint);
 				ret = false;
 				break;
@@ -382,7 +382,7 @@ ucl_schema_validate_string (const ucl_object_t *schema,
 			constraint = ucl_object_toint (elt);
 			if (obj->len < constraint) {
 				ucl_schema_create_error (err, UCL_SCHEMA_CONSTRAINT, obj,
-						"string is too short: %.3f, minimum is: %.3f",
+						"string is too short: %u, minimum is: %d",
 						obj->len, constraint);
 				ret = false;
 				break;
@@ -661,7 +661,8 @@ ucl_schema_validate_enum (const ucl_object_t *en, const ucl_object_t *obj,
 
 	if (!ret) {
 		ucl_schema_create_error (err, UCL_SCHEMA_CONSTRAINT, obj,
-				"object is not one of enumerated patterns");
+				"object is not one of enumerated patterns "
+				"%s", ucl_object_emit (en, UCL_EMIT_JSON_COMPACT));
 	}
 
 	return ret;
